@@ -1,12 +1,12 @@
 // I mentioned ownership in my last example, but now we can finally get into
-// what it means to "own" something. A "quick" overview of ownership first, 
+// what it means to "own" something. A "quick" overview of ownership first,
 // though. Brace yourself for a long lecture.
 
 // Take a phone as an example. Imagine a scenario where you're handing someone
 // your phone. To model this, you can say that they own it, and that they
-// it is theirs now. They give it back to you after they're done, saying that 
-// you own it now. this cycle can repeat over and over again. What you want to 
-// do is not to keep switching owners forever, but rather, you want them to be 
+// it is theirs now. They give it back to you after they're done, saying that
+// you own it now. this cycle can repeat over and over again. What you want to
+// do is not to keep switching owners forever, but rather, you want them to be
 // able to borrow it, and then give it back without ever losing ownership of it.
 // This is easier, because instead of transferring owners every time they need
 // to use your phone, you can let them borrow it with the assumption that
@@ -66,11 +66,11 @@
 //    conditions and unexpected behavior. If two mutable references are active
 //    at the same time, they may not produce the desired behavior. For example,
 //    The reference might move a value to another place in memory, and then
-//    the other mutable reference tries to change that values, but it is pointing
+//    the other mutable reference tries to change that value, but it is pointing
 //    to garbage data now, making this undefined behavior.
-//      b) immutable references aren't allowed, either. This is because if you have 
+//      b) immutable references aren't allowed, either. This is because if you have
 //    a mutable reference and an immutable one, the immutable one may have some
-//    assumption of the referenced value, which can be changed by the mutable 
+//    assumption of the referenced value, which can be changed by the mutable
 //    reference.
 //    Mutable references are like letting someone borrow your phone to fix it,
 //    but having multiple people looking at it or trying to fix it at the same
@@ -80,7 +80,7 @@
 // because these rules and concepts make references and ownership entirely
 // memory safe. References and never be invalid, and values can not be used
 // after they are moved to another location. This prevents a number of issues
-// such as data races, double frees, and other undefined behavior. This also 
+// such as data races, double frees, and other undefined behavior. This also
 // means that the compiler will always be able to validate references for you,
 // making sure that these bugs can never happen!
 
@@ -102,23 +102,30 @@ fn main() {
 
     // We can still use name here! We can modify it since it was marked with the
     // `mut` keyword when we defined it.
+    // Notice this notation, <var>.<method>, this is similar to the same thing
+    // in Java, where you're calling a method on a type. This method takes a
+    // mutable reference to the variable, so ownership is never transfered!
     name.push_str(" Love");
     // name = Gabe Love
 
-    // Let's call that function again.
+    // Let's call that say_hello() function again.
     // There's no compiler error!
     say_hello(&name);
 
     // Let's pass the value to a function that takes a mutable reference.
-    // We use &mut to denote a mutable reference.
+    // We use &mut to denote that we're taking a mutable reference.
     append_a(&mut name);
     // name = Gabe Lovea
-    
+
+    say_hello(&name);
+
     // uncomment the next three lines and see what the compiler tells you.
     // Try turning one of the references into an immutable reference. You
     // will get a similar error! it only errors after you use one of the
     // references, because having multiple mutable references and not doing
-    // anything with them is obviously not dangerous.
+    // anything with them is obviously not dangerous. If you have two mutable
+    // references or a mutable reference and an immutable one and try to use
+    // one of them, the compiler gives you an error.
     // let name_mut1 = &mut name;
     // let name_mut2 = &mut name;
     // say_hello(&name_mut1);
@@ -130,11 +137,13 @@ fn main() {
 
 // Notice that we take a &str here, but we can still use the function with &String.
 // This is due to something called Deref coercion, which allows some types to be
-// used as references of another type. 
+// used as references of another type.
 fn say_hello(name: &str) {
     println!("Hello, {}!", name);
 }
 
 fn append_a(name: &mut String) {
+    // This is similar to the .push_str() function, except that it only pushes
+    // one character to the string.
     name.push('a');
 }

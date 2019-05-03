@@ -2,8 +2,10 @@
 // However, unlike Java, There's no String[] args in main, and arguments are
 // actually handled through a special iterator in the `env` crate.
 fn main() {
+    // In my last example, I annotated types for every declaration. This is
+    // actually non-idiomatic.
     // Notice, there's no type annotation! This is due to Rust's type inference,
-    // which will allow you to elide type annoations in many cases. Types can
+    // which will allow you to elide type annotations in many cases. Types can
     // be determined at compile time using something called Hindley-Milner
     // Type Inference.
     let x = 5;
@@ -39,21 +41,19 @@ fn main() {
     // add. This is because all primitive types (besides str) implement a trait
     // called Copy, which means that their values are simply _copied_ instead
     // of moved when they're used. This is because copying an integer is a very
-    // inexpensive operation, versus copying a whole Vector or String into a
-    // function.
+    // inexpensive operation, versus copying a whole Vec or String into a function.
     println!("x = {} and y = {}", x, y);
 
     // We talked about type inference earlier, but there are some cases where
     // the compiler can not infer the type that you want. This is when you
     // must manually annotate the type. In this case, Vec is generic over type T,
     // which means that T can be any type, and the compiler can't figure out which
-    // Vector you really want.
+    // Vec you really want.
     // type annotations needed
     // cannot infer type for `T` rustc(E0282)
     // let broken_vec = Vec::new();
 
-    // In this case, we can use the <name>: <type> syntax talked about earlier
-    // with functions.
+    // In this case, we can use the <name>: <type> syntax talked about earlier.
     // The underscore is just so that the compiler does not complain, since we
     // aren't using the variable.
     let _working_vec: Vec<i32> = Vec::new();
